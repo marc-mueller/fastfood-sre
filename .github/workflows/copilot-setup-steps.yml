@@ -1,11 +1,13 @@
 name: Copilot setup steps
+
 on:
   workflow_call: {}
   workflow_dispatch: {}
 
 jobs:
-  setup:
+  copilot-setup-steps:
     runs-on: ubuntu-latest
+    # Use the 'copilot' environment so the agent can read COPILOT_MCP_* secrets
     environment: copilot
     steps:
       - name: Create kubeconfig directory
@@ -16,10 +18,13 @@ jobs:
           KCFG: ${{ secrets.COPILOT_MCP_KUBECONFIG }}
         run: |
           set -euo pipefail
-          printf "%s\n" "$KCFG" > /home/runner/.kube/copilot-kubeconfig
-          chmod 600 /home/runner/.kube/copilot-kubeconfig
+          KUBEFILE=/home/runner/.kube/copilot-kubeconfig
+          printf "%s\n" "$KCFG" > "$KUBEFILE"
+          chmod 600 "$KUBEFILE"
+          echo "Kubeconfig written to $KUBEFILE"
 
-      - name: Pre-pull MCP images (optional)
+      # Optional: pre-pull images to make MCP startup snappy
+      - name: Pre-pull MCP images
         run: |
           docker pull ghcr.io/azure/mcp-kubernetes:latest
           docker pull ghcr.io/marc-mueller/fastfoodmcp:latest
