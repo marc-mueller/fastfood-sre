@@ -15,11 +15,11 @@ jobs:
 
       - name: Write kubeconfig from secret
         env:
-          KCFG: ${{ secrets.COPILOT_MCP_KUBECONFIG }}
+          KCFG: ${{ secrets.SRE_KUBECONFIG }}
         run: |
           set -euo pipefail
           KUBEFILE=/home/runner/.kube/copilot-kubeconfig
-          echo "$KCFG" | tee "$KUBEFILE" > /dev/null
+          printf "%s\n" "$KCFG" > "$KUBEFILE"
           chmod 0644 "$KUBEFILE"
           echo "Kubeconfig written to $KUBEFILE"
 
