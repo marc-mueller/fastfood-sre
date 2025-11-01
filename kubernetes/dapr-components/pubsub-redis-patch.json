@@ -1,0 +1,19 @@
+# JSON Patch for Dapr Redis Component Fix
+#
+# This patch corrects the Redis hostname from 'redis-ha-haproxy-wrong.redis'
+# to 'redis-ha-haproxy.redis'
+#
+# Usage:
+#   kubectl patch component pubsub -n prod --type=json --patch-file kubernetes/dapr-components/pubsub-redis-patch.json
+#
+# Or as one-liner:
+#   kubectl patch component pubsub -n prod --type=json -p='[{"op":"replace","path":"/spec/metadata/0/value","value":"redis-ha-haproxy.redis:6379"}]'
+#
+
+[
+  {
+    "op": "replace",
+    "path": "/spec/metadata/0/value",
+    "value": "redis-ha-haproxy.redis:6379"
+  }
+]
