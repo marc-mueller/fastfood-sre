@@ -19,7 +19,7 @@ jobs:
         run: |
           set -euo pipefail
           KUBEFILE=/home/runner/.kube/copilot-kubeconfig
-          printf "%s\n" "$KCFG" > "$KUBEFILE"
+          echo "$KCFG" | tee "$KUBEFILE" > /dev/null
           chmod 0644 "$KUBEFILE"
           echo "Kubeconfig written to $KUBEFILE"
 
