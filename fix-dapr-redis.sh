@@ -9,15 +9,15 @@
 set -e
 
 NAMESPACE="prod"
-COMPONENT_NAME="pubsub"
+COMPONENTS=("pubsub" "statestore")
 
 echo "======================================"
 echo "Dapr Redis Connection Fix"
 echo "======================================"
 echo ""
 echo "This script will:"
-echo "1. Show current Dapr component configuration"
-echo "2. Apply the corrected configuration"
+echo "1. Show current Dapr component configurations"
+echo "2. Apply the corrected configurations for both pubsub and statestore"
 echo "3. Restart all deployments in namespace: $NAMESPACE"
 echo "4. Wait for deployments to be ready"
 echo "5. Verify pod status"
@@ -30,14 +30,19 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo ""
-echo "[1/5] Current Dapr component configuration:"
+echo "[1/5] Current Dapr component configurations:"
 echo "-------------------------------------------"
-kubectl get component $COMPONENT_NAME -n $NAMESPACE -o yaml || true
+for component in "${COMPONENTS[@]}"; do
+    echo "Component: $component"
+    kubectl get component $component -n $NAMESPACE -o yaml 2>/dev/null || echo "  Component $component not found (will be created)"
+    echo ""
+done
 
 echo ""
-echo "[2/5] Applying corrected configuration..."
+echo "[2/5] Applying corrected configurations..."
 echo "-------------------------------------------"
 kubectl apply -f kubernetes/dapr-components/pubsub-redis.yaml
+kubectl apply -f kubernetes/dapr-components/statestore-redis.yaml
 
 echo ""
 echo "[3/5] Restarting deployments in namespace: $NAMESPACE..."

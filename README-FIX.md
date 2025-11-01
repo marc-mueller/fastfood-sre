@@ -1,20 +1,23 @@
 # Dapr Redis Connection Fix
 
 ## Problem
-All Fast-Food services in namespace `prod` are in CrashLoopBackOff due to Dapr component initialization failure. The Dapr pubsub component is configured with an incorrect Redis hostname: `redis-ha-haproxy-wrong.redis` (DNS fails with "no such host").
+All Fast-Food services in namespace `prod` are in CrashLoopBackOff due to Dapr component initialization failure. The Dapr components (pubsub and statestore) are configured with an incorrect Redis hostname: `redis-ha-haproxy-wrong.redis` (DNS fails with "no such host").
 
 ## Solution
-The hostname needs to be corrected to: `redis-ha-haproxy.redis`
+The hostname needs to be corrected to: `redis-ha-haproxy.redis` in both components.
 
 ## Files in This Repository
 
 ### `kubernetes/dapr-components/pubsub-redis.yaml`
-The corrected Dapr Component manifest with the proper Redis hostname.
+The corrected Dapr pubsub component manifest with the proper Redis hostname.
+
+### `kubernetes/dapr-components/statestore-redis.yaml`
+The corrected Dapr state store component manifest with the proper Redis hostname.
 
 ### `fix-dapr-redis.sh`
 Automated script that:
-1. Shows current configuration
-2. Applies the corrected Dapr component
+1. Shows current configurations
+2. Applies the corrected Dapr components (both pubsub and statestore)
 3. Restarts all deployments in `prod` namespace
 4. Waits for readiness
 5. Verifies pod status
@@ -24,7 +27,8 @@ Automated script that:
 If you want to apply the fix immediately without the script:
 
 ```bash
-kubectl apply -f kubernetes/dapr-components/pubsub-redis.yaml && \
+kubectl apply -f kubernetes/dapr-components/pubsub-redis.yaml \
+  -f kubernetes/dapr-components/statestore-redis.yaml && \
 kubectl rollout restart deployment -n prod --all
 ```
 

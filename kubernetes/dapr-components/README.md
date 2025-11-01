@@ -5,11 +5,24 @@ This directory contains corrected Dapr component manifests for the Fast-Food sys
 ## Files
 
 ### `pubsub-redis.yaml`
-Complete Dapr Component manifest with the corrected Redis hostname.
+Complete Dapr pubsub component manifest with the corrected Redis hostname.
 
 **Usage:**
 ```bash
 kubectl apply -f pubsub-redis.yaml
+```
+
+### `statestore-redis.yaml`
+Complete Dapr state store component manifest with the corrected Redis hostname.
+
+**Usage:**
+```bash
+kubectl apply -f statestore-redis.yaml
+```
+
+### Apply Both Components
+```bash
+kubectl apply -f pubsub-redis.yaml -f statestore-redis.yaml
 ```
 
 ### `pubsub-redis-patch.json`
