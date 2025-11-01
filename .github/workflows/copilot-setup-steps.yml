@@ -20,7 +20,7 @@ jobs:
           set -euo pipefail
           KUBEFILE=/home/runner/.kube/copilot-kubeconfig
           printf "%s\n" "$KCFG" > "$KUBEFILE"
-          chmod 600 "$KUBEFILE"
+          chmod 0644 "$KUBEFILE"
           echo "Kubeconfig written to $KUBEFILE"
 
       # Optional: pre-pull images to make MCP startup snappy
