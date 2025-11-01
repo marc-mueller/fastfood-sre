@@ -1,5 +1,14 @@
 # Dapr Redis Connection Failure - DNS Lookup Error
 
+> **🚨 QUICK FIX FOR ON-CALL ENGINEER:**  
+> Execute this one-liner to fix the issue:
+> ```bash
+> kubectl patch component pubsub -n prod --type=json -p='[{"op":"replace","path":"/spec/metadata/0","value":{"name":"redisHost","value":"redis-ha-haproxy.redis:6379"}}]' && kubectl rollout restart deployment -n prod --all
+> ```
+> Then skip to **Section 5: Verification Steps** below.
+
+---
+
 **When:** 2025-11-01T13:12:52Z  
 **Cluster:** dev-aks-k8sdemo-westeurope  
 **Namespace:** prod  
@@ -185,4 +194,11 @@ Expected output: `PONG`
 ## Summary
 **Quick Fix:** Change `redis-ha-haproxy-wrong.redis` to `redis-ha-haproxy.redis` in the Dapr pubsub component configuration, then restart all affected deployments.
 
-**Status:** Resolution steps documented. Manual execution required due to lack of kubernetes MCP tool access in current environment.
+**Estimated Time to Resolution:** 5-10 minutes
+
+**Status:** ⚠️ **ACTION REQUIRED** - This incident has been diagnosed and documented with complete resolution steps. Manual execution of kubectl commands is required by an operator with cluster access to:
+1. Patch the Dapr pubsub component with the correct Redis hostname
+2. Restart all affected deployments
+3. Verify service recovery
+
+**Risk Assessment:** LOW - This is a simple configuration fix with no data loss risk. The change only corrects a typo in the hostname.
