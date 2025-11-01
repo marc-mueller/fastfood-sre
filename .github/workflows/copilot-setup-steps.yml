@@ -1,0 +1,25 @@
+name: Copilot setup steps
+on:
+  workflow_call: {}
+  workflow_dispatch: {}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    environment: copilot
+    steps:
+      - name: Create kubeconfig directory
+        run: mkdir -p /home/runner/.kube
+
+      - name: Write kubeconfig from secret
+        env:
+          KCFG: ${{ secrets.COPILOT_MCP_KUBECONFIG }}
+        run: |
+          set -euo pipefail
+          printf "%s\n" "$KCFG" > /home/runner/.kube/copilot-kubeconfig
+          chmod 600 /home/runner/.kube/copilot-kubeconfig
+
+      - name: Pre-pull MCP images (optional)
+        run: |
+          docker pull ghcr.io/azure/mcp-kubernetes:latest
+          docker pull ghcr.io/marc-mueller/fastfoodmcp:latest
