@@ -44,10 +44,10 @@ Both components now correctly reference: `redis-ha-haproxy.redis:6379`
 To apply the fix to the cluster:
 
 ```bash
-# Apply Dapr components to the prod namespace
-kubectl apply -f k8s/dapr-components/ -n prod
+# Apply Dapr components (namespace is defined in the YAML files)
+kubectl apply -f k8s/dapr-components/
 
-# Verify components are loaded
+# Verify components are loaded in the prod namespace
 kubectl get components -n prod
 
 # Restart affected pods to pick up the new configuration
